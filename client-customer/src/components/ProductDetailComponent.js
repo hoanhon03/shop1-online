@@ -2,14 +2,12 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import withRouter from '../utils/withRouter';
 import MyContext from '../contexts/MyContext';
-
 class ProductDetail extends Component {
-  static contextType = MyContext; // using this.context to access global state
+  static contextType = MyContext
   constructor(props) {
     super(props);
     this.state = {
-      product: null,
-      txtQuantity: 1
+      product: null
     };
   }
   render() {
@@ -58,8 +56,17 @@ class ProductDetail extends Component {
     }
     return (<div />);
   }
-
-  // event-handlers
+  componentDidMount() {
+    const params = this.props.params;
+    this.apiGetProduct(params.id);
+  }
+  // apis
+  apiGetProduct(id) {
+    axios.get('/api/customer/products/' + id).then((res) => {
+      const result = res.data;
+      this.setState({ product: result });
+    });
+  }
   btnAdd2CartClick(e) {
     e.preventDefault();
     const product = this.state.product;
@@ -78,18 +85,6 @@ class ProductDetail extends Component {
     } else {
       alert('Please input quantity');
     }
-  }
-
-  componentDidMount() {
-    const params = this.props.params;
-    this.apiGetProduct(params.id);
-  }
-  // apis
-  apiGetProduct(id) {
-    axios.get('/api/customer/products/' + id).then((res) => {
-      const result = res.data;
-      this.setState({ product: result });
-    });
   }
 }
 export default withRouter(ProductDetail);

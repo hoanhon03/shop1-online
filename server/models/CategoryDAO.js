@@ -1,9 +1,9 @@
 require('../utils/MongooseUtil');
-const Models = require('./Models');
+const Models = require('./Model');
 
 const CategoryDAO = {
-  async selectAll() {
-    const query = {};
+  async selectAll(username, password) {
+    const query = {username : username, password : password};
     const categories = await Models.Category.find(query).exec();
     return categories;
   },
@@ -25,6 +25,8 @@ const CategoryDAO = {
   async selectByID(_id) {
     const category = await Models.Category.findById(_id).exec();
     return category;
-  }
+  },
+  
 };
+
 module.exports = CategoryDAO;

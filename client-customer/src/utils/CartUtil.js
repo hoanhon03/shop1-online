@@ -1,10 +1,10 @@
 const CartUtil = {
-    getTotal(mycart) {
-      var total = 0;
-      for (const item of mycart) {
-        total += item.product.price * item.quantity;
-      }
-      return total;
+  getTotal(mycart) {
+    var total = 0;
+    for (const item of mycart) {
+      total += item.product.price * item.quantity;
     }
-  };
-  export default CartUtil;
+    return total;
+  },
+};
+export default CartUtil;

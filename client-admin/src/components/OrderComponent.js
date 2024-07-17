@@ -85,7 +85,13 @@ class Order extends Component {
       </div>
     );
   }
-  // event-handlers 
+  componentDidMount() {
+    this.apiGetOrders();
+  }
+  // event-handlers
+  trItemClick(item) {
+    this.setState({ order: item });
+  }
   lnkApproveClick(id) {
     this.apiPutOrderStatus(id, 'APPROVED');
   }
@@ -105,14 +111,6 @@ class Order extends Component {
       }
     });
   }
-  componentDidMount() {
-    this.apiGetOrders();
-  }
-  // event-handlers
-  trItemClick(item) {
-    this.setState({ order: item });
-  }
-  // apis
   apiGetOrders() {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.get('/api/admin/orders', config).then((res) => {

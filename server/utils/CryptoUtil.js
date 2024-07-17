@@ -7,4 +7,3 @@ const CryptoUtil = {
     }
   };
   module.exports = CryptoUtil;
-  

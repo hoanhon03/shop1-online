@@ -1,8 +1,7 @@
 require('../utils/MongooseUtil');
-const Models = require('./Models');
+const Models = require('./Model');
 
 const OrderDAO = {
-  // insert
   async insert(order) {
     const mongoose = require('mongoose');
     order._id = new mongoose.Types.ObjectId();

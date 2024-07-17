@@ -1,14 +1,13 @@
-import axios from 'axios';
-import React, { Component } from 'react';
-import MyContext from '../contexts/MyContext';
-
+import React, { Component } from "react";
+import MyContext from "../contexts/MyContext";
+import axios from "axios";
 class CategoryDetail extends Component {
   static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
-      txtID: '',
-      txtName: ''
+      txtID: "",
+      txtName: "",
     };
   }
   render() {
@@ -20,18 +19,53 @@ class CategoryDetail extends Component {
             <tbody>
               <tr>
                 <td>ID</td>
-                <td><input type="text" value={this.state.txtID} onChange={(e) => { this.setState({ txtID: e.target.value }) }} readOnly={true} /></td>
+                <td>
+                  <input
+                    type="text"
+                    value={this.state.txtID}
+                    onChange={(e) => {
+                      this.setState({ txtID: e.target.value });
+                    }}
+                  />
+                </td>
               </tr>
               <tr>
                 <td>Name</td>
-                <td><input type="text" value={this.state.txtName} onChange={(e) => { this.setState({ txtName: e.target.value }) }} /></td>
+                <td>
+                  <input
+                    type="text"
+                    value={this.state.txtName}
+                    onChange={(e) => {
+                      this.setState({ txtName: e.target.value });
+                    }}
+                  />
+                </td>
               </tr>
               <tr>
-                <td></td>
                 <td>
-                  <input type="submit" value="ADD NEW" onClick={(e) => this.btnAddClick(e)} />
-                  <input type="submit" value="UPDATE" onClick={(e) => this.btnUpdateClick(e)} />
+                  {" "}
+                  <input
+                    type="submit"
+                    value="ADD NEW"
+                    onClick={(e) => this.btnAddClick(e)}
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <input
+                    type="submit"
+                    value="UPDATE"
+                    onClick={(e) => this.btnUpdateClick(e)}
+                  />
+                </td>
+                <td>
+                  {" "}
                   <input type="submit" value="DELETE" onClick={(e) => this.btnDeleteClick(e)} />
+                </td>
+                <td>
+                  <input type="submit" value="ADD NEW" />
+                  <input type="submit" value="UPDATE" />
+                  <input type="submit" value="DELETE" />
                 </td>
               </tr>
             </tbody>
@@ -40,7 +74,37 @@ class CategoryDetail extends Component {
       </div>
     );
   }
-  // event-handlers update
+
+  btnAddClick(e) {
+    e.preventDefault();
+    const name = this.state.txtName;
+    if (name) {
+      const cate = { name: name };
+      this.apiPostCategory(cate);
+    } else {
+      alert("Please input name");
+    }
+  }
+  // apis
+  apiPostCategory(cate) {
+    const config = { headers: { "x-access-token": this.context.token } };
+    axios.post("/api/admin/categories", cate, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert("OK BABY!");
+        this.apiGetCategories();
+      } else {
+        alert("SORRY BABY!");
+      }
+    });
+  }
+  apiGetCategories() {
+    const config = { headers: { "x-access-token": this.context.token } };
+    axios.get("/api/admin/categories", config).then((res) => {
+      const result = res.data;
+      this.props.updateCategories(result);
+    });
+  }
   btnUpdateClick(e) {
     e.preventDefault();
     const id = this.state.txtID;
@@ -52,7 +116,6 @@ class CategoryDetail extends Component {
       alert('Please input id and name');
     }
   }
-  // apis
   apiPutCategory(id, cate) {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.put('/api/admin/categories/' + id, cate, config).then((res) => {
@@ -65,32 +128,8 @@ class CategoryDetail extends Component {
       }
     });
   }
-   // event-handlers add
-   btnAddClick(e) {
-    e.preventDefault();
-    const name = this.state.txtName;
-    if (name) {
-      const cate = { name: name };
-      this.apiPostCategory(cate);
-    } else {
-      alert('Please input name');
-    }
-  }
-  // apis
-  apiPostCategory(cate) {
-    const config = { headers: { 'x-access-token': this.context.token } };
-    axios.post('/api/admin/categories', cate, config).then((res) => {
-      const result = res.data;
-      if (result) {
-        alert('OK BABY!');
-        this.apiGetCategories();
-      } else {
-        alert('SORRY BABY!');
-      }
-    });
-  }
   // delete
-   btnDeleteClick(e) {
+  btnDeleteClick(e) {
     e.preventDefault();
     if (window.confirm('ARE YOU SURE?')) {
       const id = this.state.txtID;
@@ -101,7 +140,6 @@ class CategoryDetail extends Component {
       }
     }
   }
-  // apis id
   apiDeleteCategory(id) {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.delete('/api/admin/categories/' + id, config).then((res) => {
@@ -114,16 +152,12 @@ class CategoryDetail extends Component {
       }
     });
   }
-  apiGetCategories() {
-    const config = { headers: { 'x-access-token': this.context.token } };
-    axios.get('/api/admin/categories', config).then((res) => {
-      const result = res.data;
-      this.props.updateCategories(result);
-    });
-  }
   componentDidUpdate(prevProps) {
     if (this.props.item !== prevProps.item) {
-      this.setState({ txtID: this.props.item._id, txtName: this.props.item.name });
+      this.setState({
+        txtID: this.props.item._id,
+        txtName: this.props.item.name,
+      });
     }
   }
 }
